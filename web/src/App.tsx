@@ -1,121 +1,128 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import { useMemo, useState } from 'react'
 import './App.css'
 
+const sampleText =
+  '您好，关于今天法兰克福出港的冷链货物，请协助确认订舱状态、截单时间以及是否需要优先装载。'
+
+const phraseBank = [
+  {
+    cn: '请协助确认订舱状态。',
+    en: 'Please help confirm the booking status.',
+  },
+  {
+    cn: '该票货物对航班稳定性要求较高。',
+    en: 'This shipment is highly sensitive to flight stability.',
+  },
+  {
+    cn: '请确认是否可以优先装载。',
+    en: 'Please confirm whether priority loading can be arranged.',
+  },
+  {
+    cn: '如有异常，请第一时间通知我们。',
+    en: 'Please notify us immediately if there is any irregularity.',
+  },
+  {
+    cn: '请提供最新的舱位和运价反馈。',
+    en: 'Please provide the latest feedback on capacity and rate.',
+  },
+]
+
+function createDemoTranslation(text: string) {
+  if (!text.trim()) {
+    return '请输入需要翻译或整理的航空货运沟通内容。'
+  }
+
+  return `Demo English Draft:
+
+Hello,
+
+Regarding the cold-chain shipment departing from Frankfurt today, could you please help confirm the booking status, document cut-off time, and whether priority loading is required?
+
+If there is any irregularity, please kindly notify us as soon as possible.
+
+Best regards,`
+}
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [sourceText, setSourceText] = useState(sampleText)
+
+  const demoTranslation = useMemo(() => {
+    return createDemoTranslation(sourceText)
+  }, [sourceText])
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
+    <main className="app-shell">
+      <section className="hero">
         <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
+          <p className="eyebrow">Air Cargo Bilingual Assistant</p>
+          <h1>航空货运双语助手</h1>
+          <p className="hero-text">
+            面向海外营业部、货代客户、航司内部沟通场景，辅助整理中文思路、生成英文表达，
+            后续可接入语音识别、机器翻译和行业术语库。
           </p>
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
+        <div className="status-card">
+          <span className="status-dot" />
+          <div>
+            <strong>当前阶段</strong>
+            <p>前端 UI 骨架已启动，暂未接入真实翻译 API。</p>
+          </div>
         </div>
       </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      <section className="workspace">
+        <div className="panel">
+          <div className="panel-header">
+            <div>
+              <h2>中文输入</h2>
+              <p>输入待翻译、待润色或待整理的货运沟通内容。</p>
+            </div>
+            <button onClick={() => setSourceText(sampleText)}>填入示例</button>
+          </div>
+
+          <textarea
+            value={sourceText}
+            onChange={(event) => setSourceText(event.target.value)}
+            placeholder="例如：请帮我把这段中文整理成适合发给海外货代客户的英文邮件……"
+          />
+
+          <div className="button-row">
+            <button className="secondary" onClick={() => setSourceText('')}>
+              清空
+            </button>
+            <button>生成英文参考</button>
+          </div>
+        </div>
+
+        <div className="panel output-panel">
+          <div className="panel-header">
+            <div>
+              <h2>英文参考输出</h2>
+              <p>当前为演示输出，下一步接入真实翻译和润色能力。</p>
+            </div>
+          </div>
+
+          <pre>{demoTranslation}</pre>
+        </div>
+      </section>
+
+      <section className="phrase-section">
+        <div className="section-title">
+          <h2>航空货运常用表达</h2>
+          <p>先沉淀高频表达，后续扩展为术语库和场景模板。</p>
+        </div>
+
+        <div className="phrase-grid">
+          {phraseBank.map((item) => (
+            <article className="phrase-card" key={item.cn}>
+              <p className="cn">{item.cn}</p>
+              <p className="en">{item.en}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+    </main>
   )
 }
 
